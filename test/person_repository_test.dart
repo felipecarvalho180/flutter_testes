@@ -11,7 +11,7 @@ import 'person_repository_test.mocks.dart';
 @GenerateMocks([http.Client])
 void main() {
   final client = MockClient();
-  final repository = PersonRepository(client: client);
+  final repository = PersonRepository(client);
 
   test('deve retornar uma lista', () async {
     when(client.get(Uri.parse(
@@ -20,6 +20,14 @@ void main() {
 
     final list = await repository.getPersons();
     expect(list.isNotEmpty, equals(true));
+  });
+
+  test('deve retornar um erro', () async {
+    when(client.get(Uri.parse(
+            'https://5ecafaf138df960016511b4c.mockapi.io/api/v1/person')))
+        .thenAnswer((_) async => http.Response(jsonReturn, 404));
+
+    expect(() async => await repository.getPersons(), throwsException);
   });
 }
 

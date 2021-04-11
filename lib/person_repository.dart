@@ -5,11 +5,11 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_testes/person.dart';
 
 class PersonRepository {
-  http.Client client;
+  late http.Client client;
 
-  PersonRepository({
-    required this.client,
-  });
+  PersonRepository([http.Client? newClient]) {
+    client = newClient ?? http.Client();
+  }
 
   Future<List<Person>> getPersons() async {
     final response = await client.get(
